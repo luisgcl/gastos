@@ -1,27 +1,54 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Header from './components/Header';
+import Formulario from './components/Formulario';
+import Listado from './components/Listado';
+import './components/css/App.css';
 
 class App extends Component {
+  state = {
+    presupuesto : '',
+    restante : '',
+    gastos : {}
+  }
+
+  //agregar un nuevo gasto al state
+  agregarGasto = gasto => {
+    //tomar una copia del state actual
+    const gastos = {...this.state.gastos};
+
+    console.log(gastos);
+
+    //agregar el gasto al objeto del state
+    gastos[`gasto${Date.now()}`] = gasto;
+
+    console.log(gastos);
+    //ponerlo en state
+    this.setState({
+      gastos
+    })
+
+  }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div className="App container">
+      <Header 
+        titulo="Gasto Semanal"
+      />
+      <div className="contenido-principal contenido">
+        <div className="row">
+          <div className="one-half column">
+            <Formulario 
+              agregarGasto= {this.agregarGasto}
+            />
+          </div>
+          <div className="one-half column">
+            <Listado />
+          </div>
+        </div>
       </div>
-    );
+    </div>
+    )
   }
 }
 
