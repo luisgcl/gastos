@@ -1,16 +1,29 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types'
+
 
 
 
 
 class Gasto extends Component {
     render() {
+        const {cantidadGasto, nombreGasto} = this.props.gasto;
+        
         return (
             <div>
-                <p>Desde gasto</p>
+                <li className="gastos">
+                    <p>
+                        {nombreGasto}
+                        <span className="gasto">$ {cantidadGasto}</span>
+                    </p>
+                </li>
             </div>
         );
     }
+}
+
+Gasto.propTypes = {
+    gasto: PropTypes.object.isRequired
 }
 
 export default Gasto;

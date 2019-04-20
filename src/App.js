@@ -2,13 +2,37 @@ import React, { Component } from 'react';
 import Header from './components/Header';
 import Formulario from './components/Formulario';
 import Listado from './components/Listado';
+import {validarPresupuesto} from './helper';
+import ControlPresupuesto from './components/ControlPresupuesto';
 import './components/css/App.css';
 
 class App extends Component {
-  state = {
-    presupuesto : '',
-    restante : '',
-    gastos : {}
+ 
+  constructor(props) {
+    super(props)
+    this.state = {
+      presupuesto : '',
+      restante : '',
+      gastos : {}
+    }
+  }
+
+  componentDidMount() {
+    this.obtenerPresupuesto();
+  }
+
+  obtenerPresupuesto() {
+    let presupuesto = prompt('Cual es el presupuesto?');
+   
+    let resultado = validarPresupuesto(presupuesto);
+    if(resultado) {
+      this.setState({
+        presupuesto: presupuesto,
+        restante: presupuesto
+      })
+    }else {
+      this.obtenerPresupuesto();
+    }
   }
 
   //agregar un nuevo gasto al state
@@ -16,18 +40,39 @@ class App extends Component {
     //tomar una copia del state actual
     const gastos = {...this.state.gastos};
 
-    console.log(gastos);
+    //Restar presupuesto
+    this.restarPresupuesto(gasto.cantidadGasto);
 
     //agregar el gasto al objeto del state
     gastos[`gasto${Date.now()}`] = gasto;
 
-    console.log(gastos);
+    
     //ponerlo en state
     this.setState({
       gastos
     })
 
   }
+
+  //Restar el presupuesto cuando un gasto se crea
+  restarPresupuesto = cantidad => {
+    //Leer el gasto
+    let restar = Number(cantidad);
+
+    //tomar una copia del state actual
+      let restante = this.state.restante;
+
+    //lo restamos
+      restante -= restar;
+
+      restante = String(restante);
+
+    //agregamos el nuevo state
+    this.setState({
+      restante
+    })
+  }
+
 
   render() {
     return (
@@ -43,7 +88,14 @@ class App extends Component {
             />
           </div>
           <div className="one-half column">
-            <Listado />
+            <Listado 
+              gastos={this.state.gastos}
+            />
+          <ControlPresupuesto
+            presupuesto={this.state.presupuesto}
+            restante={this.state.restante}
+          />
+            
           </div>
         </div>
       </div>
